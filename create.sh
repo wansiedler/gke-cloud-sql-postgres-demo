@@ -26,7 +26,8 @@ help() {
 ROOT=$(dirname "${BASH_SOURCE[0]}")
 
 LC_CTYPE=C
-RANDOM_SUFFIX=$(tr -dc 'a-z0-9' </dev/urandom | fold -w 6 | head -n 1)
+RANDOM_SUFFIX=$(LC_CTYPE=C tr -dc 'a-z0-9' </dev/urandom | fold -w 6 | head -n 1)
+echo $RANDOM_SUFFIX
 export INSTANCE_NAME=demo-postgres-${RANDOM_SUFFIX}
 echo "$INSTANCE_NAME" > "${ROOT}"/.instance
 
@@ -35,20 +36,32 @@ if [ -z "$INSTANCE_NAME" ] ; then
   exit 1
 fi
 
-export USER_NAME=$1
-if [ -z "$USER_NAME" ] ; then
-  help
-  exit 1
-fi
 
-export PG_ADMIN_CONSOLE_EMAIL=$2
-if [ -z "$PG_ADMIN_CONSOLE_EMAIL" ]; then
-  help
-  exit 1
-fi
+
+
+
+export USER_NAME=postgres
+export PG_ADMIN_CONSOLE_EMAIL=postgres
+export PG_ADMIN_CONSOLE_PASSWORD=postgres
+export USER_PASSWORD=postgres
+# export USER_NAME=$1
+# if [ -z "$USER_NAME" ] ; then
+#   help
+#   exit 1
+# fi
+
+# export PG_ADMIN_CONSOLE_EMAIL=$2
+# if [ -z "$PG_ADMIN_CONSOLE_EMAIL" ]; then
+#   help
+#   exit 1
+# fi
+
 
 CLUSTER_ZONE=$(gcloud config get-value compute/zone)
 INSTANCE_REGION=$(gcloud config get-value compute/region)
+
+
+
 
 export CLUSTER_ZONE
 if [ -z "$CLUSTER_ZONE" ]; then
